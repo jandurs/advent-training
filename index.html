@@ -17,8 +17,8 @@
       padding: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top, rgba(56, 189, 248, 0.25), transparent 55%),
-        radial-gradient(circle at bottom, rgba(129, 140, 248, 0.18), transparent 55%),
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.3), transparent 55%),
+        radial-gradient(circle at bottom, rgba(129, 140, 248, 0.22), transparent 55%),
         linear-gradient(180deg, #020617 0%, #02041b 50%, #020617 100%);
       overflow-x: hidden;
     }
@@ -38,8 +38,7 @@
     .snowflake {
       position: absolute;
       top: -10%;
-      color: rgba(255, 255, 255, 0.35);
-      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
       animation-name: fall;
       animation-timing-function: linear;
       animation-iteration-count: infinite;
@@ -47,19 +46,24 @@
     }
 
     @keyframes fall {
-      0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      100% { transform: translateY(110vh) translateX(30px) rotate(360deg); opacity: 0; }
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) translateX(30px) rotate(360deg);
+        opacity: 0;
+      }
     }
 
     /* Intro Overlay */
     #intro {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at top, rgba(56,189,248,0.3), transparent 60%), #020617;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.35), transparent 60%), #020617;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -69,7 +73,11 @@
       z-index: 200;
     }
 
-    #intro h1 { font-size: 2rem; margin-bottom: 1rem; }
+    #intro h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
     #intro p {
       font-size: 1rem;
       color: #c7c9ff;
@@ -77,6 +85,7 @@
       max-width: 520px;
       line-height: 1.5;
     }
+
     #intro button {
       padding: 0.6rem 1.4rem;
       background: #4f46e5;
@@ -88,7 +97,11 @@
       box-shadow: 0 8px 24px rgba(79,70,229,0.6);
       transition: 0.2s ease;
     }
-    #intro button:hover { background: #6366f1; transform: translateY(-1px); }
+
+    #intro button:hover {
+      background: #6366f1;
+      transform: translateY(-1px);
+    }
 
     .page {
       max-width: 960px;
@@ -99,8 +112,17 @@
       z-index: 1;
     }
 
-    h1 { text-align: center; font-size: 2rem; margin: 0 0 0.25rem; }
-    .subtitle { text-align: center; margin-bottom: 2rem; color: #c7c9ff; }
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin: 0 0 0.25rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #c7c9ff;
+    }
 
     /* Grid */
     .grid {
@@ -119,80 +141,169 @@
     .card {
       background: transparent;
       perspective: 1000px;
-      height: 200px;
+      height: 260px;          /* mehr Platz -> kein Überlappen */
+      box-sizing: border-box;
       opacity: 0;
       animation: fadeUp 0.6s ease forwards;
     }
-    @media(max-width:600px){ .card{height:220px;} }
+
+    @media (max-width: 600px) {
+      .card {
+        height: 300px;        /* auf Handy noch etwas höher */
+      }
+    }
 
     .card-inner {
-      width:100%; height:100%;
-      position:relative;
-      transform-style:preserve-3d;
-      transition:transform .6s;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
     }
-    .card.flipped .card-inner{ transform:rotateX(180deg); }
+
+    .card.flipped .card-inner {
+      transform: rotateX(180deg);
+    }
 
     .card-face {
-      position:absolute;
-      top:0; left:0; width:100%; height:100%;
-      background:rgba(15,23,42,0.96);
-      border-radius:0.9rem;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(148,163,184,0.35);
-      box-shadow:0 12px 40px rgba(15,23,42,0.9);
-      display:flex; flex-direction:column;
-      gap:0.6rem;
-      backface-visibility:hidden;
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 0.9rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      backface-visibility: hidden;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
-    .card-front { transform: rotateX(0deg); }
-    .card-back { transform: rotateX(180deg); }
+    .card-front {
+      transform: rotateX(0deg);
+    }
+
+    .card-back {
+      transform: rotateX(180deg);
+    }
 
     .card-header {
-      display:flex; justify-content:space-between; align-items:baseline; gap:0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      flex-shrink: 0;
     }
-    .day-label{ font-weight:600; }
-    .intensity{
-      font-size:0.75rem; padding:0.15rem 0.5rem;
-      border-radius:999px;
-      background:rgba(79,70,229,0.18);
-      display:flex; align-items:center; gap:0.3rem;
+
+    .day-label {
+      font-weight: 600;
+      font-size: 1rem;
     }
-    .text{ flex:1; font-size:0.9rem; overflow-y:auto; }
 
-    /* Buttons */
-    .btn, .btn-secondary{
-      padding:0.4rem 0.75rem;
-      border-radius:999px;
-      border:none;
-      text-transform:uppercase;
-      font-size:0.8rem;
-      cursor:pointer;
-      transition:.2s;
+    .intensity {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(79, 70, 229, 0.18);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #e8ecff;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-shrink: 0;
     }
-    .btn{ background:#4f46e5; color:#fff; }
-    .btn-secondary{ background:#16a34a; color:#fff; }
 
-    .btn:hover{ background:#6366f1; }
-    .btn-secondary:hover{ background:#22c55e; }
+    .icon {
+      font-size: 1.1rem;
+    }
 
-    /* Toast */
+    .text {
+      flex: 1;
+      font-size: 0.9rem;
+      color: #e3e4ff;
+      line-height: 1.4;
+      white-space: pre-line;
+      overflow-y: auto;
+    }
+
+    .btn,
+    .btn-secondary {
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      border: none;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+      align-self: flex-start;
+    }
+
+    .btn {
+      background: #4f46e5;
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-secondary {
+      background: #16a34a;
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4);
+    }
+
+    .btn:hover {
+      background: #6366f1;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary:hover {
+      background: #22c55e;
+      transform: translateY(-1px);
+    }
+
     .toast {
-      position:fixed; left:50%; bottom:1.5rem;
-      transform:translateX(-50%);
-      background:#22c55e; color:#022c16;
-      padding:0.5rem 1rem; border-radius:999px;
-      opacity:0; transition:.2s;
+      position: fixed;
+      left: 50%;
+      bottom: 1.5rem;
+      transform: translateX(-50%);
+      background: #22c55e;
+      color: #022c16;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s ease;
+      z-index: 50;
     }
-    .toast.show{ opacity:1; transform:translate(-50%,-4px); }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -4px);
+    }
 
     /* Today + past effect */
-    .today-card .card-face{
-      box-shadow:0 0 22px rgba(96,165,250,0.8);
-      border-color:rgba(129,140,248,0.9);
+    .today-card .card-face {
+      box-shadow: 0 0 28px rgba(96, 165, 250, 0.9);
+      border-color: rgba(129, 140, 248, 0.95);
     }
-    .past-card .card-face{ opacity:0.7; filter:grayscale(15%); }
+
+    .past-card .card-face {
+      opacity: 0.7;
+      filter: grayscale(18%);
+    }
+
+    /* Admin info footer */
+    .admin-footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
 
     /* Confetti */
     .confetti-piece {
@@ -201,11 +312,12 @@
       height: 10px;
       border-radius: 2px;
       animation: confetti-fall 1.2s ease-out forwards;
-      z-index: 50;
+      z-index: 60;
     }
+
     @keyframes confetti-fall {
-      0% { transform:translateY(0) rotate(0); opacity:1; }
-      100%{ transform:translateY(60px) rotate(260deg); opacity:0; }
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(60px) rotate(260deg); opacity: 0; }
     }
   </style>
 </head>
@@ -228,192 +340,245 @@
   <div class="page">
     <h1>Katrin Fitmas – Advent Training</h1>
     <p class="subtitle">One new workout per day in December.</p>
+
     <div id="grid" class="grid"></div>
 
-    <div style="text-align:center; margin-top:2rem; opacity:0.6;">
-      Admin view: add <strong>?admin=true</strong> to the URL
+    <div class="admin-footer">
+      (Admin view: add <strong>?admin=true</strong> to the URL)
     </div>
   </div>
 
   <div id="toast" class="toast"></div>
 
 <script>
-/* ---------------- SNOWFLAKE SCRIPT ---------------- */
+/* ---------- SNOWFLAKES (mit mehr Effekten) ---------- */
 (function createSnowflakes() {
   const container = document.querySelector(".snowflakes");
   const symbols = ["❄","✦","✧","❅","✶"];
-  const COUNT = 100;    // ⬅⬅⬅ HIER MENGE EINSTELLEN
+  const COUNT = 70;  // ⬅⬅⬅ HIER: Anzahl der Flocken
 
   for (let i = 0; i < COUNT; i++) {
     const flake = document.createElement("div");
     flake.className = "snowflake";
-    flake.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
 
-    const delay = Math.random()*10;
-    const duration = 10 + Math.random()*12;
-    const left = Math.random()*100;
+    const delay = Math.random() * 10;
+    const duration = 10 + Math.random() * 12;
+    const left = Math.random() * 100;
+    const size = 0.6 + Math.random() * 1.1;         // unterschiedliche Größen
+    const opacity = 0.3 + Math.random() * 0.6;      // unterschiedliche Helligkeit
 
     flake.style.left = left + "vw";
     flake.style.animationDelay = delay + "s";
     flake.style.animationDuration = duration + "s";
+    flake.style.fontSize = size + "rem";
+    flake.style.opacity = opacity;
 
     container.appendChild(flake);
   }
 })();
 
-/* ---------------- WORKOUT DATA ---------------- */
+/* ---------- WORKOUT DATA ---------- */
 const workouts = [
   { day:1, intensity:"Workout", icon:"🏋🏼‍♀️", text:"Mobility/Core: 45 min mobility & core." },
-  { day:2, intensity:"Skitour Easy", icon:"⛷️", text:"Skitour: 600–800 hm in Z2." },
-  { day:3, intensity:"Recovery", icon:"💤", text:"Run: 30 min easy in Z1." },
-  { day:4, intensity:"Threshold Uphill", icon:"🔥", text:"Run: 4×6 min Z4 uphill." },
-  { day:5, intensity:"Trail Endurance", icon:"🌲", text:"Run: 60 min Z2 on trails." },
-  { day:6, intensity:"Skitour Technique", icon:"⛷️", text:"Skitour: 700–900 hm, technique focus." },
-  { day:7, intensity:"Long Endurance", icon:"🏃‍♀️", text:"Run: 90 min Z2." },
-  { day:8, intensity:"VO2max", icon:"🚀", text:"Run: 6×3 min Z5." },
-  { day:9, intensity:"Workout", icon:"🏋🏼‍♀️", text:"Mobility/Core: 45 min." },
-  { day:10,intensity:"Skitour Sweet Spot", icon:"⛷️", text:"Skitour: 1000 hm with Z3 sections." },
-  { day:11,intensity:"Threshold", icon:"🔥", text:"Run: 25 min Z4." },
-  { day:12,intensity:"Trail Endurance", icon:"🌲", text:"Run: 50 min Z2." },
-  { day:13,intensity:"Skitour Steady", icon:"⛷️", text:"Skitour: 900–1100 hm Z2–Z3." },
-  { day:14,intensity:"Workout", icon:"🏋🏼‍♀️", text:"Mobility/Core: 45 min." },
-  { day:15,intensity:"Easy Run", icon:"🏃‍♀️", text:"Run: 45 min Z2." },
-  { day:16,intensity:"Skitour Technique", icon:"⛷️", text:"Skitour: 700–900 hm." },
-  { day:17,intensity:"Recovery", icon:"💤", text:"Run: 25 min Z1." },
-  { day:18,intensity:"Threshold", icon:"🔥", text:"Run: 3×8 min Z4." },
-  { day:19,intensity:"Easy Run", icon:"🏃‍♀️", text:"Run: 45 min Z2." },
-  { day:20,intensity:"Skitour Uphill", icon:"⛷️", text:"Skitour: 1000 hm with Z3." },
-  { day:21,intensity:"Workout", icon:"🏋🏼‍♀️", text:"Mobility/Core: 45 min." },
-  { day:22,intensity:"VO2max Uphill", icon:"🚀", text:"Run: 8×2 min Z5 uphill." },
-  { day:23,intensity:"Recovery", icon:"💤", text:"Run: 30 min Z1." },
-  { day:24,intensity:"Final Skitour", icon:"⛷️", text:"Skitour: 1200–1500 hm Z2." }
+  { day:2, intensity:"Skitour Easy", icon:"⛷️", text:"Skitour: 600–800 hm in Z2 at steady cadence." },
+  { day:3, intensity:"Recovery", icon:"💤", text:"Run: 30 min very easy recovery in Z1." },
+  { day:4, intensity:"Threshold Uphill", icon:"🔥", text:"Run: 15 min warmup in Z1, 4 × 6 min uphill in Z4, easy cooldown." },
+  { day:5, intensity:"Trail Endurance", icon:"🌲", text:"Run: 60 min trail run in Z2." },
+  { day:6, intensity:"Skitour Technique", icon:"⛷️", text:"Skitour: 700–900 hm in Z2, focus on smooth technique." },
+  { day:7, intensity:"Long Endurance", icon:"🏃‍♀️", text:"Run: 90 min endurance run in Z2." },
+  { day:8, intensity:"VO2max", icon:"🚀", text:"Run: 6 × 3 min in Z5 with easy recovery between intervals." },
+  { day:9, intensity:"Workout", icon:"🏋🏼‍♀️", text:"Mobility/Core: 45 min focused strength & stability work." },
+  { day:10,intensity:"Skitour Sweet Spot", icon:"⛷️", text:"Skitour: ~1000 hm with 2 × 15 min uphill in Z3, rest in Z2." },
+  { day:11,intensity:"Threshold", icon:"🔥", text:"Run: 25 min continuous threshold in Z4 after easy warmup." },
+  { day:12,intensity:"Trail Endurance", icon:"🌲", text:"Run: 50 min easy trail run in Z2." },
+  { day:13,intensity:"Skitour Steady", icon:"⛷️", text:"Skitour: 900–1100 hm in Z2–Z3, steady pacing." },
+  { day:14,intensity:"Workout", icon:"🏋🏼‍♀️", text:"Mobility/Core: 45 min mobility & core workout." },
+  { day:15,intensity:"Easy Run", icon:"🏃‍♀️", text:"Run: 45 min relaxed endurance in Z2." },
+  { day:16,intensity:"Skitour Technique", icon:"⛷️", text:"Skitour: 700–900 hm, focus on transitions and efficiency." },
+  { day:17,intensity:"Recovery", icon:"💤", text:"Run: 25 min very easy run or brisk walk in Z1." },
+  { day:18,intensity:"Threshold", icon:"🔥", text:"Run: 3 × 8 min in Z4 with 3 min easy between." },
+  { day:19,intensity:"Easy Run", icon:"🏃‍♀️", text:"Run: 45 min easy endurance in Z2." },
+  { day:20,intensity:"Skitour Uphill", icon:"⛷️", text:"Skitour: ~1000 hm with one 20 min section in Z3, otherwise Z2." },
+  { day:21,intensity:"Workout", icon:"🏋🏼‍♀️", text:"Mobility/Core: 45 min mobility & core workout." },
+  { day:22,intensity:"VO2max Uphill", icon:"🚀", text:"Run: 8 × 2 min uphill in Z5 with 2 min easy jog between." },
+  { day:23,intensity:"Recovery", icon:"💤", text:"Run: 30 min very easy Z1 or relaxed walk." },
+  { day:24,intensity:"Final Skitour", icon:"⛷️", text:"Skitour: 1200–1500 hm in Z2. Enjoy the views and celebrate your Fitmas journey!" }
 ];
 
-/* ---------------- ADMIN & INTRO LOGIC ---------------- */
-const isAdmin = new URLSearchParams(window.location.search).get("admin")==="true";
+/* ---------- ADMIN & INTRO ---------- */
+const isAdmin = new URLSearchParams(window.location.search).get("admin") === "true";
 const intro = document.getElementById("intro");
 const page = document.querySelector(".page");
 
 document.getElementById("intro-btn").onclick = () => {
-  intro.style.display="none"; page.style.display="block";
-  if(!isAdmin){ localStorage.setItem("advent_intro_shown","yes"); }
+  intro.style.display = "none";
+  page.style.display = "block";
+  if (!isAdmin) localStorage.setItem("advent_intro_shown", "yes");
 };
 
-if(isAdmin){
-  intro.style.display="none"; page.style.display="block";
-}else if(localStorage.getItem("advent_intro_shown")==="yes"){
-  intro.style.display="none"; page.style.display="block";
+if (isAdmin) {
+  intro.style.display = "none";
+  page.style.display = "block";
+} else if (localStorage.getItem("advent_intro_shown") === "yes") {
+  intro.style.display = "none";
+  page.style.display = "block";
 }
 
-function getVisibleDayLimit(){
-  if(isAdmin) return 24;
-  const now=new Date();
-  return now.getMonth()===11 ? Math.min(now.getDate(),24):0;
+function getVisibleDayLimit() {
+  if (isAdmin) return 24;
+  const now = new Date();
+  return now.getMonth() === 11 ? Math.min(now.getDate(), 24) : 0;
 }
-function getToday(){ const n=new Date(); return n.getMonth()===11 ? n.getDate():null; }
 
-/* ---------------- TOAST ---------------- */
-const toast=document.getElementById("toast");
-const messages=[
-  "You've got this! 💪","Consistency wins. ⭐","Strong & steady! 🏔️",
-  "Sellaronda is getting closer. ⛷️","Make it count. 🔥","Winning the day! 📆",
-  "Future you is cheering. 🙌","One step stronger. ⚡","Great choice! 🎉"
+function getTodayDay() {
+  const now = new Date();
+  return now.getMonth() === 11 ? now.getDate() : null;
+}
+
+/* ---------- TOAST ---------- */
+const toast = document.getElementById("toast");
+const toastMessages = [
+  "You've got this! 💪",
+  "Consistency wins. ⭐",
+  "Strong & steady! 🏔️",
+  "Sellaronda is getting closer. ⛷️",
+  "Make it count today. 🔥",
+  "Winning the day! 📆",
+  "Future you is cheering. 🙌",
+  "One step stronger. ⚡",
+  "Great choice – go for it! 🎉",
+  "Beautiful effort incoming. ✨",
+  "This is athlete mode. 🏅",
+  "Breathe, move, enjoy. 🌬️"
 ];
 
-function showToast(){
-  toast.textContent = messages[Math.floor(Math.random()*messages.length)];
+function showToast() {
+  toast.textContent = toastMessages[Math.floor(Math.random() * toastMessages.length)];
   toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"),1500);
+  setTimeout(() => toast.classList.remove("show"), 1500);
 }
 
-/* ---------------- CONFETTI ---------------- */
-function confetti(card, mult=1){
-  const rect=card.getBoundingClientRect();
-  const colors=["#f97316","#facc15","#22c55e","#38bdf8","#a855f7","#f472b6"];
-  const count = 14*mult;
+/* ---------- CONFETTI ---------- */
+function launchConfetti(card, mult = 1) {
+  const rect = card.getBoundingClientRect();
+  const colors = ["#f97316", "#facc15", "#22c55e", "#38bdf8", "#a855f7", "#f472b6"];
+  const baseCount = 14;
+  const count = Math.round(baseCount * mult);
 
-  for(let i=0;i<count;i++){
-    const piece=document.createElement("div");
-    piece.className="confetti-piece";
-    piece.style.background=colors[Math.floor(Math.random()*colors.length)];
-    piece.style.left=(rect.left+rect.width/2+(Math.random()*80-40))+"px";
-    piece.style.top=(rect.top+20+Math.random()*40)+"px";
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.left = rect.left + rect.width / 2 + (Math.random() * 80 - 40) + "px";
+    piece.style.top = rect.top + 20 + Math.random() * 40 + "px";
     document.body.appendChild(piece);
-    setTimeout(()=>piece.remove(),1300);
+    setTimeout(() => piece.remove(), 1300);
   }
 }
 
-/* ---------------- RENDER ---------------- */
-function render(){
-  const limit=getVisibleDayLimit();
-  const today=getToday();
-  const grid=document.getElementById("grid");
+/* ---------- RENDER CARDS ---------- */
+function renderWorkouts() {
+  const grid = document.getElementById("grid");
+  const visibleLimit = getVisibleDayLimit();
+  const today = getTodayDay();
 
-  workouts.filter(w=>w.day<=limit).forEach((w,i)=>{
-    const card=document.createElement("div");
-    card.className="card";
-    card.style.animationDelay=(i*0.06)+"s";
+  workouts
+    .filter(w => w.day <= visibleLimit)
+    .forEach((w, idx) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.style.animationDelay = (idx * 0.06) + "s";
 
-    const inner=document.createElement("div");
-    inner.className="card-inner";
+      const inner = document.createElement("div");
+      inner.className = "card-inner";
 
-    /* FRONT */
-    const front=document.createElement("div");
-    front.className="card-face card-front";
-    front.innerHTML=`
-      <div class="card-header">
+      // FRONT
+      const front = document.createElement("div");
+      front.className = "card-face card-front";
+
+      const headerFront = document.createElement("div");
+      headerFront.className = "card-header";
+      headerFront.innerHTML = `
         <div class="day-label">Day ${w.day}</div>
         <div class="intensity"><span class="icon">${w.icon}</span>${w.intensity}</div>
-      </div>
-      <div class="text">Tap “Let's go” to reveal today's workout.</div>
-    `;
-    const go=document.createElement("button");
-    go.className="btn-secondary";
-    go.textContent="Let's go";
+      `;
 
-    front.appendChild(go);
+      const textFront = document.createElement("div");
+      textFront.className = "text";
+      textFront.textContent = "Tap “Let's go” to reveal today's workout.";
 
-    /* BACK */
-    const back=document.createElement("div");
-    back.className="card-face card-back";
-    back.innerHTML=`
-      <div class="card-header">
+      const goBtn = document.createElement("button");
+      goBtn.className = "btn-secondary";
+      goBtn.textContent = "Let's go";
+
+      front.appendChild(headerFront);
+      front.appendChild(textFront);
+      front.appendChild(goBtn);
+
+      // BACK
+      const back = document.createElement("div");
+      back.className = "card-face card-back";
+
+      const headerBack = document.createElement("div");
+      headerBack.className = "card-header";
+      headerBack.innerHTML = `
         <div class="day-label">Day ${w.day}</div>
         <div class="intensity"><span class="icon">${w.icon}</span>${w.intensity}</div>
-      </div>
-      <div class="text">${w.text}</div>
-    `;
-    const copy=document.createElement("button");
-    copy.className="btn";
-    copy.textContent="Copy workout";
-    copy.onclick=()=>{navigator.clipboard.writeText(w.text); showToast();};
+      `;
 
-    back.appendChild(copy);
+      const textBack = document.createElement("div");
+      textBack.className = "text";
+      textBack.textContent = w.text;
 
-    /* GLUE */
-    inner.appendChild(front);
-    inner.appendChild(back);
-    card.appendChild(inner);
+      const copyBtn = document.createElement("button");
+      copyBtn.className = "btn";
+      copyBtn.textContent = "Copy workout";
+      copyBtn.onclick = () => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(w.text).then(showToast).catch(showToast);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = w.text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+          showToast();
+        }
+      };
 
-    /* Today/past visual */
-    if(today && w.day===today) card.classList.add("today-card");
-    else if(today && w.day<today) card.classList.add("past-card");
+      back.appendChild(headerBack);
+      back.appendChild(textBack);
+      back.appendChild(copyBtn);
 
-    /* Confetti logic */
-    go.onclick=()=>{
-      card.classList.add("flipped");
-      if([7,14,21].includes(w.day)) confetti(card,1.3);
-      if(w.day===24){
-        confetti(card,2.2);
-        setTimeout(()=>confetti(card,1.6),300);
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+
+      // Today / past styling
+      if (today && w.day === today) {
+        card.classList.add("today-card");
+      } else if (today && w.day < today) {
+        card.classList.add("past-card");
       }
-    };
 
-    grid.appendChild(card);
-  });
+      // Confetti on 7, 14, 21, 24
+      goBtn.onclick = () => {
+        card.classList.add("flipped");
+        if ([7, 14, 21].includes(w.day)) {
+          launchConfetti(card, 1.3);
+        } else if (w.day === 24) {
+          launchConfetti(card, 2.3);
+          setTimeout(() => launchConfetti(card, 1.8), 350);
+        }
+      };
+
+      grid.appendChild(card);
+    });
 }
 
-render();
+renderWorkouts();
 </script>
 </body>
 </html>
