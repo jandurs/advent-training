@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Advent Training Calendar</title>
+  <title>Sellaronda Advent Training Calendar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -139,9 +139,9 @@
 </head>
 <body>
   <div class="page">
-    <h1>Advent Training Calendar</h1>
+    <h1>Sellaronda Advent Training</h1>
     <p class="subtitle">
-      Only workouts up to today are visible in December. Click a day to copy the workout text for importmyworkout.com.
+      24 structured December workouts towards Sellaronda Skimarathon. In December, only workouts up to today are visible. Click a day to copy the workout text for importmyworkout.com.
     </p>
 
     <div id="grid" class="grid"></div>
@@ -150,41 +150,42 @@
   <div id="toast" class="toast">Workout copied to clipboard</div>
 
   <script>
+    // Advent workouts: skimo-oriented, zone based for importmyworkout.com
     const workouts = [
       {
         day: 1,
         intensity: "Easy",
-        text: "Run: 45 min easy run in Z2."
+        text: "Run: 45 min easy endurance run in Z2."
       },
       {
         day: 2,
-        intensity: "Moderate",
+        intensity: "Endurance Uphill",
         text: "Run: 10 min warmup in Z1, 30 min steady uphill effort in Z3, 10 min cooldown in Z1."
       },
       {
         day: 3,
-        intensity: "Threshold",
-        text: "Run: 10 min warmup in Z1, 5 x 4 min in Z4 with 2 min recovery in Z1, 10 min cooldown in Z1."
+        intensity: "Recovery",
+        text: "Run: 30 min very easy recovery run in Z1."
       },
       {
         day: 4,
-        intensity: "Recovery",
-        text: "Run: 25 min very easy recovery run in Z1."
+        intensity: "Threshold",
+        text: "Run: 15 min warmup in Z1, 4 x 6 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1."
       },
       {
         day: 5,
-        intensity: "Endurance",
+        intensity: "Trail Endurance",
         text: "Run: 60 min trail run in Z2."
       },
       {
         day: 6,
-        intensity: "Moderate",
-        text: "Run: 10 min warmup in Z1, 30 min uphill effort in Z3, 10 min cooldown in Z1."
+        intensity: "Uphill Technique",
+        text: "Run: 10 min warmup in Z1, 30 min moderate uphill in Z2 working on steady cadence, 10 min cooldown in Z1."
       },
       {
         day: 7,
-        intensity: "Endurance",
-        text: "Run: 85 min long run in Z2."
+        intensity: "Long Endurance",
+        text: "Run: 90 min long run in Z2."
       },
       {
         day: 8,
@@ -194,11 +195,11 @@
       {
         day: 9,
         intensity: "Recovery",
-        text: "Run: 35 min easy recovery run in Z1."
+        text: "Run: 35 min very easy recovery run in Z1."
       },
       {
         day: 10,
-        intensity: "Moderate",
+        intensity: "Sweet Spot Uphill",
         text: "Run: 10 min warmup in Z1, 40 min steady uphill sweet spot in Z3, 10 min cooldown in Z1."
       },
       {
@@ -208,27 +209,27 @@
       },
       {
         day: 12,
-        intensity: "Endurance",
+        intensity: "Trail Endurance",
         text: "Run: 50 min easy trail run in Z2."
       },
       {
         day: 13,
-        intensity: "Moderate",
+        intensity: "Uphill Endurance",
         text: "Run: 10 min warmup in Z1, 35 min steady uphill effort in Z3, 10 min cooldown in Z1."
       },
       {
         day: 14,
-        intensity: "Endurance",
-        text: "Run: 135 min long trail run in Z2."
+        intensity: "Long Trail",
+        text: "Run: 130–140 min long trail run in Z2."
       },
       {
         day: 15,
         intensity: "Easy",
-        text: "Run: 45 min easy run in Z2."
+        text: "Run: 45 min easy endurance run in Z2."
       },
       {
         day: 16,
-        intensity: "Moderate",
+        intensity: "Technique Uphill",
         text: "Run: 10 min warmup in Z1, 30 min technique-focused uphill in Z2, 10 min cooldown in Z1."
       },
       {
@@ -239,7 +240,7 @@
       {
         day: 18,
         intensity: "Threshold",
-        text: "Run: 10 min warmup in Z1, 3 x 6 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1."
+        text: "Run: 10 min warmup in Z1, 3 x 8 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1."
       },
       {
         day: 19,
@@ -248,13 +249,13 @@
       },
       {
         day: 20,
-        intensity: "Moderate",
+        intensity: "Uphill Endurance",
         text: "Run: 10 min warmup in Z1, 40 min moderate uphill in Z3, 10 min cooldown in Z1."
       },
       {
         day: 21,
         intensity: "Recovery",
-        text: "Run: 20 min very easy movement in Z1."
+        text: "Run: 20–25 min very easy movement in Z1."
       },
       {
         day: 22,
@@ -264,12 +265,12 @@
       {
         day: 23,
         intensity: "Recovery",
-        text: "Run: 30 min very easy recovery run or walk in Z1."
+        text: "Run: 30 min very easy recovery run or brisk walk in Z1."
       },
       {
         day: 24,
-        intensity: "Endurance",
-        text: "Run: 75 min easy trail run in Z2."
+        intensity: "Long Endurance",
+        text: "Run: 75–90 min easy trail run in Z2."
       }
     ];
 
