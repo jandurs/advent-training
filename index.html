@@ -17,18 +17,58 @@
       padding: 0;
     }
 
-    .header-image {
-      width: 100%;
-      max-height: 260px;
-      object-fit: cover;
-      border-bottom: 2px solid rgba(255,255,255,0.1);
+    /* Intro Overlay */
+    #intro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #0b1020;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      z-index: 200;
+    }
+
+    #intro h1 {
+      font-size: 2rem;
       margin-bottom: 1rem;
+    }
+
+    #intro p {
+      font-size: 1rem;
+      color: #c7c9ff;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      line-height: 1.5;
+    }
+
+    #intro button {
+      padding: 0.6rem 1.3rem;
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(79,70,229,0.4);
+      transition: 0.2s ease;
+    }
+
+    #intro button:hover {
+      background: #6366f1;
+      transform: translateY(-1px);
     }
 
     .page {
       max-width: 960px;
       margin: 0 auto;
       padding: 2rem 1rem 3rem;
+      display: none; /* starts hidden until intro dismissed */
     }
 
     h1 {
@@ -116,12 +156,6 @@
     .btn:hover {
       background: #6366f1;
       transform: translateY(-1px);
-      box-shadow: 0 8px 22px rgba(79, 70, 229, 0.55);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.4);
     }
 
     .toast {
@@ -137,7 +171,7 @@
       box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: 0.2s ease;
       z-index: 50;
     }
 
@@ -149,16 +183,24 @@
 </head>
 <body>
 
-  <!-- 🎄 Header Image -->
-  <img class="header-image" 
-       src="https://unsplash.com/de/fotos/schneebedeckter-berg-JVtcrWcbj1c"
-       alt="Christmas Mountain Header">
+  <!-- INTRO SCREEN -->
+  <div id="intro">
+    <h1>🎄 Welcome to Your Advent Training 🎄</h1>
+    <p>
+      Throughout December, one workout unlocks each day – just like a real Advent calendar.
+      These sessions are designed to prepare you step-by-step for the Sellaronda Skimarathon.
+      <br><br>
+      Click below to begin your journey!
+    </p>
+    <button id="intro-btn">Start</button>
+  </div>
 
+  <!-- MAIN PAGE -->
   <div class="page">
     <h1>Sellaronda Advent Training</h1>
     <p class="subtitle">
-      In December you will see each day's workout when it unlocks.<br>
-      (Admin mode: add <strong>?admin=true</strong> to the URL)
+      Workouts unlock day-by-day during December.<br>
+      (Admin view: add <strong>?admin=true</strong> to the URL)
     </p>
 
     <div id="grid" class="grid"></div>
@@ -167,43 +209,66 @@
   <div id="toast" class="toast">Workout copied</div>
 
   <script>
+    // Workouts
     const workouts = [
       { day: 1, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy endurance run in Z2." },
       { day: 2, intensity: "Skitour Easy", icon: "⛷️", text: "Skitour: 600–800 hm in Z2 at steady cadence." },
       { day: 3, intensity: "Recovery", icon: "💤", text: "Run: 30 min very easy recovery run in Z1." },
-      { day: 4, intensity: "Threshold Uphill", icon: "🔥", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4, 3 min recovery, cooldown." },
+      { day: 4, intensity: "Threshold Uphill", icon: "🔥", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4, cooldown." },
       { day: 5, intensity: "Trail Endurance", icon: "🌲", text: "Run: 60 min trail run in Z2." },
-      { day: 6, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2, focus on kick turns & cadence." },
+      { day: 6, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2." },
       { day: 7, intensity: "Long Endurance", icon: "🏃‍♀️", text: "Run: 90 min endurance run in Z2." },
-      { day: 8, intensity: "VO2max", icon: "🚀", text: "Run: 15 min warmup, 6 x 3 min in Z5 with 3 min recovery, cooldown 10 min." },
-      { day: 9, intensity: "Recovery", icon: "💤", text: "Run: 35 min very easy run in Z1." },
-      { day: 10, intensity: "Skitour Sweet Spot", icon: "⛷️", text: "Skitour: 1000 hm with 2 x 15 min uphill in Z3." },
-      { day: 11, intensity: "Threshold", icon: "🔥", text: "Run: 10 min warmup, 25 min Z4 threshold, cooldown." },
-      { day: 12, intensity: "Trail Endurance", icon: "🌲", text: "Run: 50 min trail run Z2." },
+      { day: 8, intensity: "VO2max", icon: "🚀", text: "Run: 6 x 3 min in Z5 with recovery." },
+      { day: 9, intensity: "Recovery", icon: "💤", text: "Run: 35 min recovery in Z1." },
+      { day: 10, intensity: "Skitour Sweet Spot", icon: "⛷️", text: "Skitour: 1000 hm with Z3 blocks." },
+      { day: 11, intensity: "Threshold", icon: "🔥", text: "Run: 25 min threshold in Z4." },
+      { day: 12, intensity: "Trail Endurance", icon: "🌲", text: "Run: 50 min trail Z2." },
       { day: 13, intensity: "Skitour Steady", icon: "⛷️", text: "Skitour: 900–1100 hm in Z2–Z3." },
       { day: 14, intensity: "Long Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2." },
-      { day: 15, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy endurance in Z2." },
-      { day: 16, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2, transition practice." },
-      { day: 17, intensity: "Recovery", icon: "💤", text: "Run: 25 min recovery in Z1." },
-      { day: 18, intensity: "Threshold", icon: "🔥", text: "Run: 10 min warmup, 3 x 8 min Z4, cooldown." },
-      { day: 19, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy run Z2." },
-      { day: 20, intensity: "Skitour Uphill", icon: "⛷️", text: "Skitour: 1000 hm with 20 min Z3 in the climb." },
-      { day: 21, intensity: "Recovery", icon: "💤", text: "Run: 20–25 min recovery Z1." },
-      { day: 22, intensity: "VO2max Uphill", icon: "🚀", text: "Run: 15 min warmup, 8 x 2 min Z5 uphill, cooldown." },
-      { day: 23, intensity: "Recovery", icon: "💤", text: "Run: 30 min recovery or walk Z1." },
-      { day: 24, intensity: "Long Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2." }
+      { day: 15, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min Z2." },
+      { day: 16, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm." },
+      { day: 17, intensity: "Recovery", icon: "💤", text: "Run: 25 min easy." },
+      { day: 18, intensity: "Threshold", icon: "🔥", text: "Run: 3 x 8 min Z4." },
+      { day: 19, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min Z2." },
+      { day: 20, intensity: "Skitour Uphill", icon: "⛷️", text: "Skitour: 1000 hm with Z3 section." },
+      { day: 21, intensity: "Recovery", icon: "💤", text: "Run: 20–25 min Z1." },
+      { day: 22, intensity: "VO2max Uphill", icon: "🚀", text: "Run: 8 x 2 min Z5 uphill." },
+      { day: 23, intensity: "Recovery", icon: "💤", text: "Run: 30 min Z1." },
+      { day: 24, intensity: "Long Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm Z2." }
     ];
 
     const grid = document.getElementById("grid");
     const toast = document.getElementById("toast");
+    const intro = document.getElementById("intro");
+    const page = document.querySelector(".page");
 
     const isAdmin = new URLSearchParams(window.location.search).get("admin") === "true";
 
+    // -------- INTRO LOGIC --------
+    function showIntro() {
+      intro.style.display = "flex";
+      page.style.display = "none";
+    }
+
+    function hideIntro() {
+      intro.style.display = "none";
+      page.style.display = "block";
+      localStorage.setItem("advent_intro_shown", "yes");
+    }
+
+    document.getElementById("intro-btn").onclick = hideIntro;
+
+    if (localStorage.getItem("advent_intro_shown") === "yes") {
+      intro.style.display = "none";
+      page.style.display = "block";
+    }
+
+    // -------- WORKOUT VISIBILITY --------
     function getVisibleDayLimit() {
       if (isAdmin) return 24;
       const now = new Date();
       if (now.getMonth() === 11) return Math.min(now.getDate(), 24);
-      return 0; // user sees nothing outside December
+      return 0; // Hide all outside December
     }
 
     function showToast() {
@@ -257,5 +322,6 @@
 
     renderWorkouts();
   </script>
+
 </body>
 </html>
