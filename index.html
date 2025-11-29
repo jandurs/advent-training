@@ -179,6 +179,15 @@
       opacity: 1;
       transform: translate(-50%, -4px);
     }
+
+    /* Admin info footer */
+    .admin-footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: #999;
+    }
+
   </style>
 </head>
 <body>
@@ -187,7 +196,7 @@
   <div id="intro">
     <h1>🎄 Welcome to Your Advent Training 🎄</h1>
     <p>
-      Throughout December, one workout unlocks each day – just like a real Advent calendar.
+      Throughout December, one workout unlocks each day – just like a real Advent calendar.<br>
       These sessions are designed to prepare you step-by-step for the Sellaronda Skimarathon.
       <br><br>
       Click below to begin your journey!
@@ -199,11 +208,15 @@
   <div class="page">
     <h1>Sellaronda Advent Training</h1>
     <p class="subtitle">
-      Workouts unlock day-by-day during December.<br>
-      (Admin view: add <strong>?admin=true</strong> to the URL)
+      Workouts unlock day-by-day during December.
     </p>
 
     <div id="grid" class="grid"></div>
+
+    <!-- ADMIN FOOTER -->
+    <div class="admin-footer">
+      (Admin view: add <strong>?admin=true</strong> to the URL)
+    </div>
   </div>
 
   <div id="toast" class="toast">Workout copied</div>
@@ -219,7 +232,7 @@
       { day: 6, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2." },
       { day: 7, intensity: "Long Endurance", icon: "🏃‍♀️", text: "Run: 90 min endurance run in Z2." },
       { day: 8, intensity: "VO2max", icon: "🚀", text: "Run: 6 x 3 min in Z5 with recovery." },
-      { day: 9, intensity: "Mobility/Stretching", icon: "🧘🏼‍♀️", text: "Mobility: 30 min Mobility." },
+      { day: 9, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core Workout." },
       { day: 10, intensity: "Skitour Sweet Spot", icon: "⛷️", text: "Skitour: 1000 hm with Z3 blocks." },
       { day: 11, intensity: "Threshold", icon: "🔥", text: "Run: 25 min threshold in Z4." },
       { day: 12, intensity: "Trail Endurance", icon: "🌲", text: "Run: 50 min trail Z2." },
@@ -231,10 +244,10 @@
       { day: 18, intensity: "Threshold", icon: "🔥", text: "Run: 3 x 8 min Z4." },
       { day: 19, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min Z2." },
       { day: 20, intensity: "Skitour Uphill", icon: "⛷️", text: "Skitour: 1000 hm with Z3 section." },
-      { day: 21, intensity: "Mobility/Stretching", icon: "🧘🏼‍♀️", text: "Mobility: 45 min Mobility Workout." },
+      { day: 21, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core Workout" },
       { day: 22, intensity: "VO2max Uphill", icon: "🚀", text: "Run: 8 x 2 min Z5 uphill." },
       { day: 23, intensity: "Recovery", icon: "💤", text: "Run: 30 min Z1." },
-      { day: 24, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min Z2." }
+      { day: 24, intensity: "Long Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2." }
     ];
 
     const grid = document.getElementById("grid");
@@ -245,11 +258,6 @@
     const isAdmin = new URLSearchParams(window.location.search).get("admin") === "true";
 
     // -------- INTRO LOGIC --------
-    function showIntro() {
-      intro.style.display = "flex";
-      page.style.display = "none";
-    }
-
     function hideIntro() {
       intro.style.display = "none";
       page.style.display = "block";
@@ -300,9 +308,6 @@
           intEl.className = "intensity";
           intEl.innerHTML = `<span class="icon">${w.icon}</span>${w.intensity}`;
 
-          header.appendChild(dayEl);
-          header.appendChild(intEl);
-
           const textEl = document.createElement("div");
           textEl.className = "text";
           textEl.textContent = w.text;
@@ -311,6 +316,9 @@
           btn.className = "btn";
           btn.textContent = "Copy workout";
           btn.onclick = () => copyToClipboard(w.text);
+
+          header.appendChild(dayEl);
+          header.appendChild(intEl);
 
           card.appendChild(header);
           card.appendChild(textEl);
