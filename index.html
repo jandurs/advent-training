@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Sellaronda Advent Training Calendar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -16,6 +17,14 @@
       padding: 0;
     }
 
+    .header-image {
+      width: 100%;
+      max-height: 260px;
+      object-fit: cover;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      margin-bottom: 1rem;
+    }
+
     .page {
       max-width: 960px;
       margin: 0 auto;
@@ -25,6 +34,7 @@
     h1 {
       text-align: center;
       margin-bottom: 0.25rem;
+      font-size: 2rem;
     }
 
     .subtitle {
@@ -67,10 +77,17 @@
       font-size: 0.75rem;
       padding: 0.15rem 0.5rem;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.12);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: #e8ecff;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .icon {
+      font-size: 1.1rem;
     }
 
     .text {
@@ -128,14 +145,20 @@
       opacity: 1;
       transform: translate(-50%, -4px);
     }
-
   </style>
 </head>
 <body>
+
+  <!-- 🎄 Header Image -->
+  <img class="header-image" 
+       src="https://images.unsplash.com/photo-1512149177596-f817c7ef5d4c?auto=format&fit=crop&w=1400&q=80"
+       alt="Christmas Mountain Header">
+
   <div class="page">
     <h1>Sellaronda Advent Training</h1>
     <p class="subtitle">
-      24 skimo-specific December workouts. Only days up to today are visible in December.
+      In December you will see each day's workout when it unlocks.<br>
+      (Admin mode: add <strong>?admin=true</strong> to the URL)
     </p>
 
     <div id="grid" class="grid"></div>
@@ -145,55 +168,43 @@
 
   <script>
     const workouts = [
-      { day: 1, intensity: "Easy Run", text: "Run: 45 min easy endurance run in Z2." },
-      { day: 2, intensity: "Skitour Easy", text: "Skitour: 600–800 hm in Z2 at steady cadence." },
-      { day: 3, intensity: "Recovery", text: "Run: 30 min very easy recovery run in Z1." },
-
-      { day: 4, intensity: "Threshold Uphill", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1." },
-
-      { day: 5, intensity: "Trail Endurance", text: "Run: 60 min trail run in Z2." },
-
-      { day: 6, intensity: "Skitour Technique", text: "Skitour: 700–900 hm in Z2 focusing on efficient kick turns and cadence." },
-
-      { day: 7, intensity: "Long Endurance", text: "Run: 90 min long endurance run in Z2." },
-
-      { day: 8, intensity: "VO2max", text: "Run: 15 min warmup in Z1, 6 x 3 min in Z5 with 3 min recovery in Z1, 10 min cooldown in Z1." },
-
-      { day: 9, intensity: "Recovery", text: "Run: 35 min very easy recovery run in Z1." },
-
-      { day: 10, intensity: "Skitour Sweet Spot", text: "Skitour: 1000 hm total with 2 x 15 min uphill in Z3, rest in Z2." },
-
-      { day: 11, intensity: "Threshold", text: "Run: 10 min warmup in Z1, 25 min threshold in Z4, 10 min cooldown in Z1." },
-
-      { day: 12, intensity: "Trail Endurance", text: "Run: 50 min easy trail run in Z2." },
-
-      { day: 13, intensity: "Skitour Steady", text: "Skitour: 900–1100 hm in Z2–Z3 steady pace." },
-
-      { day: 14, intensity: "Long Skitour", text: "Skitour: 1200–1500 hm in Z2. Nutrition practice mandatory." },
-
-      { day: 15, intensity: "Easy Run", text: "Run: 45 min easy run in Z2." },
-
-      { day: 16, intensity: "Skitour Technique", text: "Skitour: 700–900 hm in Z2 focusing on transitions and pole work." },
-
-      { day: 17, intensity: "Recovery", text: "Run: 25 min very easy recovery run in Z1." },
-
-      { day: 18, intensity: "Threshold", text: "Run: 10 min warmup in Z1, 3 x 8 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1." },
-
-      { day: 19, intensity: "Easy Run", text: "Run: 45 min easy endurance run in Z2." },
-
-      { day: 20, intensity: "Skitour Uphill", text: "Skitour: 1000 hm with 20 min Z3 block halfway up, rest Z2." },
-
-      { day: 21, intensity: "Recovery", text: "Run: 20–25 min very easy recovery in Z1." },
-
-      { day: 22, intensity: "VO2max Uphill", text: "Run: 15 min warmup in Z1, 8 x 2 min uphill in Z5 with 2 min recovery in Z1, 10 min cooldown in Z1." },
-
-      { day: 23, intensity: "Recovery", text: "Run: 30 min very easy recovery run or walk in Z1." },
-
-      { day: 24, intensity: "Long Skitour", text: "Skitour: 1200–1500 hm in Z2. Relaxed, flowy, holiday energy." }
+      { day: 1, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy endurance run in Z2." },
+      { day: 2, intensity: "Skitour Easy", icon: "⛷️", text: "Skitour: 600–800 hm in Z2 at steady cadence." },
+      { day: 3, intensity: "Recovery", icon: "💤", text: "Run: 30 min very easy recovery run in Z1." },
+      { day: 4, intensity: "Threshold Uphill", icon: "🔥", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4, 3 min recovery, cooldown." },
+      { day: 5, intensity: "Trail Endurance", icon: "🌲", text: "Run: 60 min trail run in Z2." },
+      { day: 6, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2, focus on kick turns & cadence." },
+      { day: 7, intensity: "Long Endurance", icon: "🏃‍♀️", text: "Run: 90 min endurance run in Z2." },
+      { day: 8, intensity: "VO2max", icon: "🚀", text: "Run: 15 min warmup, 6 x 3 min in Z5 with 3 min recovery, cooldown 10 min." },
+      { day: 9, intensity: "Recovery", icon: "💤", text: "Run: 35 min very easy run in Z1." },
+      { day: 10, intensity: "Skitour Sweet Spot", icon: "⛷️", text: "Skitour: 1000 hm with 2 x 15 min uphill in Z3." },
+      { day: 11, intensity: "Threshold", icon: "🔥", text: "Run: 10 min warmup, 25 min Z4 threshold, cooldown." },
+      { day: 12, intensity: "Trail Endurance", icon: "🌲", text: "Run: 50 min trail run Z2." },
+      { day: 13, intensity: "Skitour Steady", icon: "⛷️", text: "Skitour: 900–1100 hm in Z2–Z3." },
+      { day: 14, intensity: "Long Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2." },
+      { day: 15, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy endurance in Z2." },
+      { day: 16, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2, transition practice." },
+      { day: 17, intensity: "Recovery", icon: "💤", text: "Run: 25 min recovery in Z1." },
+      { day: 18, intensity: "Threshold", icon: "🔥", text: "Run: 10 min warmup, 3 x 8 min Z4, cooldown." },
+      { day: 19, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy run Z2." },
+      { day: 20, intensity: "Skitour Uphill", icon: "⛷️", text: "Skitour: 1000 hm with 20 min Z3 in the climb." },
+      { day: 21, intensity: "Recovery", icon: "💤", text: "Run: 20–25 min recovery Z1." },
+      { day: 22, intensity: "VO2max Uphill", icon: "🚀", text: "Run: 15 min warmup, 8 x 2 min Z5 uphill, cooldown." },
+      { day: 23, intensity: "Recovery", icon: "💤", text: "Run: 30 min recovery or walk Z1." },
+      { day: 24, intensity: "Long Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2." }
     ];
 
     const grid = document.getElementById("grid");
     const toast = document.getElementById("toast");
+
+    const isAdmin = new URLSearchParams(window.location.search).get("admin") === "true";
+
+    function getVisibleDayLimit() {
+      if (isAdmin) return 24;
+      const now = new Date();
+      if (now.getMonth() === 11) return Math.min(now.getDate(), 24);
+      return 0; // user sees nothing outside December
+    }
 
     function showToast() {
       toast.classList.add("show");
@@ -203,14 +214,6 @@
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text);
       showToast();
-    }
-
-    function getVisibleDayLimit() {
-      const today = new Date();
-      const month = today.getMonth(); // 11 = December
-      const date = today.getDate();
-      if (month === 11) return Math.min(date, 24);
-      return 24; // for testing outside December
     }
 
     function renderWorkouts() {
@@ -224,20 +227,20 @@
           const header = document.createElement("div");
           header.className = "card-header";
 
-          const dayLabel = document.createElement("div");
-          dayLabel.className = "day-label";
-          dayLabel.textContent = `Day ${w.day}`;
+          const dayEl = document.createElement("div");
+          dayEl.className = "day-label";
+          dayEl.textContent = `Day ${w.day}`;
 
-          const intensity = document.createElement("div");
-          intensity.className = "intensity";
-          intensity.textContent = w.intensity;
+          const intEl = document.createElement("div");
+          intEl.className = "intensity";
+          intEl.innerHTML = `<span class="icon">${w.icon}</span>${w.intensity}`;
 
-          header.appendChild(dayLabel);
-          header.appendChild(intensity);
+          header.appendChild(dayEl);
+          header.appendChild(intEl);
 
-          const textDiv = document.createElement("div");
-          textDiv.className = "text";
-          textDiv.textContent = w.text;
+          const textEl = document.createElement("div");
+          textEl.className = "text";
+          textEl.textContent = w.text;
 
           const btn = document.createElement("button");
           btn.className = "btn";
@@ -245,8 +248,9 @@
           btn.onclick = () => copyToClipboard(w.text);
 
           card.appendChild(header);
-          card.appendChild(textDiv);
+          card.appendChild(textEl);
           card.appendChild(btn);
+
           grid.appendChild(card);
         });
     }
