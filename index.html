@@ -90,15 +90,48 @@
       gap: 1rem;
     }
 
+    /* Card with flip animation */
     .card {
+      background: transparent;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateX(180deg);
+    }
+
+    .card-face {
+      position: relative;
       background: rgba(18, 25, 55, 0.95);
       border-radius: 0.9rem;
       padding: 1rem 1.1rem 1rem;
       border: 1px solid rgba(255, 255, 255, 0.09);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      backface-visibility: hidden;
+      min-height: 140px;
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
+    }
+
+    .card-front {
+      transform: rotateX(0deg);
+    }
+
+    .card-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transform: rotateX(180deg);
     }
 
     .card-header {
@@ -137,7 +170,8 @@
       white-space: pre-line;
     }
 
-    .btn {
+    .btn,
+    .btn-secondary {
       cursor: pointer;
       align-self: flex-start;
       padding: 0.4rem 0.75rem;
@@ -153,9 +187,19 @@
       box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
     }
 
-    .btn:hover {
+    .btn:hover,
+    .btn-secondary:hover {
       background: #6366f1;
       transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #16a34a;
+      box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4);
+    }
+
+    .btn-secondary:hover {
+      background: #22c55e;
     }
 
     .toast {
@@ -187,7 +231,6 @@
       font-size: 0.85rem;
       color: #999;
     }
-
   </style>
 </head>
 <body>
@@ -297,33 +340,76 @@
           const card = document.createElement("div");
           card.className = "card";
 
-          const header = document.createElement("div");
-          header.className = "card-header";
+          const inner = document.createElement("div");
+          inner.className = "card-inner";
 
-          const dayEl = document.createElement("div");
-          dayEl.className = "day-label";
-          dayEl.textContent = `Day ${w.day}`;
+          // FRONT
+          const front = document.createElement("div");
+          front.className = "card-face card-front";
 
-          const intEl = document.createElement("div");
-          intEl.className = "intensity";
-          intEl.innerHTML = `<span class="icon">${w.icon}</span>${w.intensity}`;
+          const headerFront = document.createElement("div");
+          headerFront.className = "card-header";
 
-          const textEl = document.createElement("div");
-          textEl.className = "text";
-          textEl.textContent = w.text;
+          const dayFront = document.createElement("div");
+          dayFront.className = "day-label";
+          dayFront.textContent = `Day ${w.day}`;
 
-          const btn = document.createElement("button");
-          btn.className = "btn";
-          btn.textContent = "Copy workout";
-          btn.onclick = () => copyToClipboard(w.text);
+          const intFront = document.createElement("div");
+          intFront.className = "intensity";
+          intFront.innerHTML = `<span class="icon">${w.icon}</span>${w.intensity}`;
 
-          header.appendChild(dayEl);
-          header.appendChild(intEl);
+          headerFront.appendChild(dayFront);
+          headerFront.appendChild(intFront);
 
-          card.appendChild(header);
-          card.appendChild(textEl);
-          card.appendChild(btn);
+          const textFront = document.createElement("div");
+          textFront.className = "text";
+          textFront.textContent = "Tap “Let's go” to reveal today's workout.";
 
+          const goBtn = document.createElement("button");
+          goBtn.className = "btn-secondary";
+          goBtn.textContent = "Let's go";
+          goBtn.onclick = () => {
+            card.classList.add("flipped");
+          };
+
+          front.appendChild(headerFront);
+          front.appendChild(textFront);
+          front.appendChild(goBtn);
+
+          // BACK
+          const back = document.createElement("div");
+          back.className = "card-face card-back";
+
+          const headerBack = document.createElement("div");
+          headerBack.className = "card-header";
+
+          const dayBack = document.createElement("div");
+          dayBack.className = "day-label";
+          dayBack.textContent = `Day ${w.day}`;
+
+          const intBack = document.createElement("div");
+          intBack.className = "intensity";
+          intBack.innerHTML = `<span class="icon">${w.icon}</span>${w.intensity}`;
+
+          headerBack.appendChild(dayBack);
+          headerBack.appendChild(intBack);
+
+          const textBack = document.createElement("div");
+          textBack.className = "text";
+          textBack.textContent = w.text;
+
+          const copyBtn = document.createElement("button");
+          copyBtn.className = "btn";
+          copyBtn.textContent = "Copy workout";
+          copyBtn.onclick = () => copyToClipboard(w.text);
+
+          back.appendChild(headerBack);
+          back.appendChild(textBack);
+          back.appendChild(copyBtn);
+
+          inner.appendChild(front);
+          inner.appendChild(back);
+          card.appendChild(inner);
           grid.appendChild(card);
         });
     }
