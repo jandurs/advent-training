@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advent Training Calendar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: #f7f7ff;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: #c7c9ff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: rgba(18, 25, 55, 0.95);
+      border-radius: 0.9rem;
+      padding: 1rem 1.1rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .day-label {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .intensity {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #e8ecff;
+    }
+
+    .text {
+      font-size: 0.9rem;
+      color: #e3e4ff;
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+
+    .btn {
+      cursor: pointer;
+      align-self: flex-start;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: #4f46e5;
+      color: #ffffff;
+      transition: background 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn:hover {
+      background: #6366f1;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(79, 70, 229, 0.55);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.4);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.5rem;
+      transform: translateX(-50%);
+      background: #22c55e;
+      color: #022c16;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -4px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Advent Training Calendar</h1>
+    <p class="subtitle">
+      24 structured workouts for importmyworkout.com – click a day to copy the workout text.
+    </p>
+
+    <div id="grid" class="grid"></div>
+  </div>
+
+  <div id="toast" class="toast">Workout copied to clipboard</div>
+
+  <script>
+    const workouts = [
+      {
+        day: 1,
+        intensity: "Easy",
+        text: "Run: 45 min easy run in Z2."
+      },
+      {
+        day: 2,
+        intensity: "Moderate",
+        text: "Run: 10 min warmup in Z1, 30 min steady uphill effort in Z3, 10 min cooldown in Z1."
+      },
+      {
+        day: 3,
+        intensity: "Threshold",
+        text: "Run: 10 min warmup in Z1, 5 x 4 min in Z4 with 2 min recovery in Z1, 10 min cooldown in Z1."
+      },
+      {
+        day: 4,
+        intensity: "Recovery",
+        text: "Run: 25 min very easy recovery run in Z1."
+      },
+      {
+        day: 5,
+        intensity: "Endurance",
+        text: "Run: 60 min trail run in Z2."
+      },
+      {
+        day: 6,
+        intensity: "Moderate",
+        text: "Run: 10 min warmup in Z1, 30 min uphill effort in Z3, 10 min cooldown in Z1."
+      },
+      {
+        day: 7,
+        intensity: "Endurance",
+        text: "Run: 85 min long run in Z2."
+      },
+      {
+        day: 8,
+        intensity: "VO2max",
+        text: "Run: 15 min warmup in Z1, 6 x 3 min in Z5 with 3 min recovery in Z1, 10 min cooldown in Z1."
+      },
+      {
+        day: 9,
+        intensity: "Recovery",
+        text: "Run: 35 min easy recovery run in Z1."
+      },
+      {
+        day: 10,
+        intensity: "Moderate",
+        text: "Run: 10 min warmup in Z1, 40 min steady uphill sweet spot in Z3, 10 min cooldown in Z1."
+      },
+      {
+        day: 11,
+        intensity: "Threshold",
+        text: "Run: 10 min warmup in Z1, 25 min continuous threshold in Z4, 10 min cooldown in Z1."
+      },
+      {
+        day: 12,
+        intensity: "Endurance",
+        text: "Run: 50 min easy trail run in Z2."
+      },
+      {
+        day: 13,
+        intensity: "Moderate",
+        text: "Run: 10 min warmup in Z1, 35 min steady uphill effort in Z3, 10 min cooldown in Z1."
+      },
+      {
+        day: 14,
+        intensity: "Endurance",
+        text: "Run: 135 min long trail run in Z2."
+      },
+      {
+        day: 15,
+        intensity: "Easy",
+        text: "Run: 45 min easy run in Z2."
+      },
+      {
+        day: 16,
+        intensity: "Moderate",
+        text: "Run: 10 min warmup in Z1, 30 min technique-focused uphill in Z2, 10 min cooldown in Z1."
+      },
+      {
+        day: 17,
+        intensity: "Recovery",
+        text: "Run: 25 min very easy recovery session in Z1."
+      },
+      {
+        day: 18,
+        intensity: "Threshold",
+        text: "Run: 10 min warmup in Z1, 3 x 6 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1."
+      },
+      {
+        day: 19,
+        intensity: "Easy",
+        text: "Run: 45 min easy run in Z2."
+      },
+      {
+        day: 20,
+        intensity: "Moderate",
+        text: "Run: 10 min warmup in Z1, 40 min moderate uphill in Z3, 10 min cooldown in Z1."
+      },
+      {
+        day: 21,
+        intensity: "Recovery",
+        text: "Run: 20 min very easy movement in Z1."
+      },
+      {
+        day: 22,
+        intensity: "VO2max",
+        text: "Run: 15 min warmup in Z1, 8 x 2 min in Z5 with 2 min recovery in Z1, 10 min cooldown in Z1."
+      },
+      {
+        day: 23,
+        intensity: "Recovery",
+        text: "Run: 30 min very easy recovery run or walk in Z1."
+      },
+      {
+        day: 24,
+        intensity: "Endurance",
+        text: "Run: 75 min easy trail run in Z2."
+      }
+    ];
+
+    const grid = document.getElementById("grid");
+    const toast = document.getElementById("toast");
+    let toastTimeout = null;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1500);
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          // Fallback
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+        }
+        showToast("Workout copied to clipboard");
+      } catch (err) {
+        console.error(err);
+        showToast("Copy failed – please copy manually");
+      }
+    }
+
+    function renderWorkouts() {
+      workouts.forEach((w) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const header = document.createElement("div");
+        header.className = "card-header";
+
+        const dayLabel = document.createElement("div");
+        dayLabel.className = "day-label";
+        dayLabel.textContent = `Day ${w.day}`;
+
+        const intensity = document.createElement("div");
+        intensity.className = "intensity";
+        intensity.textContent = w.intensity;
+
+        header.appendChild(dayLabel);
+        header.appendChild(intensity);
+
+        const text = document.createElement("div");
+        text.className = "text";
+        text.textContent = w.text;
+
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.textContent = "Copy workout";
+        btn.addEventListener("click", () => copyToClipboard(w.text));
+
+        card.appendChild(header);
+        card.appendChild(text);
+        card.appendChild(btn);
+
+        grid.appendChild(card);
+      });
+    }
+
+    renderWorkouts();
+  </script>
+</body>
+</html>
