@@ -414,7 +414,11 @@
           const copyBtn = document.createElement("button");
           copyBtn.className = "btn";
           copyBtn.textContent = "Copy workout";
-          copyBtn.onclick = () => copyToClipboard(w.text);
+          copyBtn.onclick = () => {
+          copyToClipboard(w.text);
+          window.open("https://importmyworkout.com/", "_blank");
+        };
+
 
           back.appendChild(headerBack);
           back.appendChild(textBack);
