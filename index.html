@@ -2,19 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Sellaronda Advent Training Calendar</title>
+  <title>Katrin Fitmas – Advent Training Calendar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0b1020;
+      background: #020617;
       color: #f7f7ff;
     }
 
     body {
       margin: 0;
       padding: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at bottom, rgba(129, 140, 248, 0.18), transparent 55%),
+        linear-gradient(180deg, #020617 0%, #02041b 50%, #020617 100%);
+      overflow-x: hidden;
+    }
+
+    /* Snowflakes */
+    .snowflakes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -10%;
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 0.9rem;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) translateX(30px) rotate(360deg);
+        opacity: 0;
+      }
     }
 
     /* Intro Overlay */
@@ -24,7 +66,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: #0b1020;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.3), transparent 60%), #020617;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -43,19 +85,19 @@
       font-size: 1rem;
       color: #c7c9ff;
       margin-bottom: 2rem;
-      max-width: 500px;
+      max-width: 520px;
       line-height: 1.5;
     }
 
     #intro button {
-      padding: 0.6rem 1.3rem;
+      padding: 0.6rem 1.4rem;
       background: #4f46e5;
       color: #fff;
       border: none;
       border-radius: 999px;
       font-size: 1rem;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(79,70,229,0.4);
+      box-shadow: 0 8px 24px rgba(79,70,229,0.6);
       transition: 0.2s ease;
     }
 
@@ -69,6 +111,8 @@
       margin: 0 auto;
       padding: 2rem 1rem 3rem;
       display: none; /* starts hidden until intro dismissed */
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
@@ -90,11 +134,25 @@
       gap: 1rem;
     }
 
+    /* Fade-in animation for cards */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* Card with flip animation */
     .card {
       background: transparent;
       perspective: 1000px;
-      height: 200px; /* fixe Höhe damit das Grid stabil bleibt */
+      height: 200px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
     }
 
     @media (max-width: 600px) {
@@ -121,11 +179,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(18, 25, 55, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       border-radius: 0.9rem;
       padding: 1rem 1.1rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.9);
       backface-visibility: hidden;
       display: flex;
       flex-direction: column;
@@ -159,7 +217,7 @@
       font-size: 0.75rem;
       padding: 0.15rem 0.5rem;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(79, 70, 229, 0.18);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: #e8ecff;
@@ -179,7 +237,7 @@
       line-height: 1.4;
       white-space: pre-line;
       flex: 1;
-      overflow-y: auto; /* falls Text länger ist, scrollt nur der Inhalt */
+      overflow-y: auto;
     }
 
     .btn,
@@ -237,34 +295,81 @@
       transform: translate(-50%, -4px);
     }
 
+    /* Today + past styling */
+    .today-card .card-face {
+      box-shadow: 0 0 22px rgba(96, 165, 250, 0.7);
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .past-card .card-face {
+      opacity: 0.7;
+      filter: grayscale(15%);
+    }
+
     /* Admin info footer */
     .admin-footer {
       text-align: center;
       margin-top: 3rem;
       font-size: 0.85rem;
-      color: #999;
+      color: #9ca3af;
+    }
+
+    /* Confetti */
+    .confetti-piece {
+      position: absolute;
+      width: 6px;
+      height: 10px;
+      background: #facc15;
+      opacity: 0.9;
+      border-radius: 2px;
+      pointer-events: none;
+      animation: confetti-fall 1.2s ease-out forwards;
+      z-index: 30;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(60px) rotate(260deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Snowflakes -->
+  <div class="snowflakes" aria-hidden="true">
+    <div class="snowflake">❄</div>
+    <div class="snowflake">✦</div>
+    <div class="snowflake">✧</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">✶</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">✦</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">✧</div>
+    <div class="snowflake">❄</div>
+  </div>
+
   <!-- INTRO SCREEN -->
   <div id="intro">
-    <h1>🎄 Welcome to Your Advent Training 🎄</h1>
+    <h1>🎄 Welcome to your Fitmas Advent 🎄</h1>
     <p>
-      Throughout December, one workout unlocks each day – just like a real Advent calendar.<br>
-      These sessions are designed to prepare you step-by-step for the Sellaronda Skimarathon.
-      <br><br>
-      Click below to begin your journey!
+      Every day in December a new workout unlocks – like a sporty advent calendar.
+      Some days are hard, some are just mobility or recovery. Always listen to your body.
     </p>
     <button id="intro-btn">Start</button>
   </div>
 
   <!-- MAIN PAGE -->
   <div class="page">
-    <h1>Sellaronda Advent Training</h1>
+    <h1>Katrin Fitmas – Advent Training</h1>
     <p class="subtitle">
-      Workouts unlock day-by-day during December.
+      One new workout per day in December, guiding you step by step toward the Sellaronda Skimarathon.
     </p>
 
     <div id="grid" class="grid"></div>
@@ -278,32 +383,73 @@
   <div id="toast" class="toast">Workout copied</div>
 
   <script>
+    // Randomize snowflakes position & speed
+    (function initSnowflakes() {
+      const flakes = document.querySelectorAll(".snowflake");
+      flakes.forEach((flake, index) => {
+        const delay = Math.random() * 10;
+        const duration = 12 + Math.random() * 10;
+        const startLeft = Math.random() * 100;
+        flake.style.left = startLeft + "vw";
+        flake.style.animationDelay = delay + "s";
+        flake.style.animationDuration = duration + "s";
+      });
+    })();
+
     // Workouts
     const workouts = [
-      { day: 1, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core Workout" },
+      { day: 1, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core workout." },
       { day: 2, intensity: "Skitour Easy", icon: "⛷️", text: "Skitour: 600–800 hm in Z2 at steady cadence." },
       { day: 3, intensity: "Recovery", icon: "💤", text: "Run: 30 min very easy recovery run in Z1." },
       { day: 4, intensity: "Threshold Uphill", icon: "🔥", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4, cooldown." },
       { day: 5, intensity: "Trail Endurance", icon: "🌲", text: "Run: 60 min trail run in Z2." },
-      { day: 6, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2." },
+      { day: 6, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2, focus on smooth technique." },
       { day: 7, intensity: "Long Endurance", icon: "🏃‍♀️", text: "Run: 90 min endurance run in Z2." },
-      { day: 8, intensity: "VO2max", icon: "🚀", text: "Run: 6 x 3 min in Z5 with recovery." },
-      { day: 9, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core Workout." },
-      { day: 10, intensity: "Skitour Sweet Spot", icon: "⛷️", text: "Skitour: 1000 hm with Z3 blocks." },
-      { day: 11, intensity: "Threshold", icon: "🔥", text: "Run: 25 min threshold in Z4." },
-      { day: 12, intensity: "Trail Endurance", icon: "🌲", text: "Run: 50 min trail Z2." },
-      { day: 13, intensity: "Skitour Steady", icon: "⛷️", text: "Skitour: 900–1100 hm in Z2–Z3." },
-      { day: 14, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core Workout" },
-      { day: 15, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min Z2." },
-      { day: 16, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm." },
-      { day: 17, intensity: "Recovery", icon: "💤", text: "Run: 25 min easy." },
-      { day: 18, intensity: "Threshold", icon: "🔥", text: "Run: 3 x 8 min Z4." },
-      { day: 19, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min Z2." },
-      { day: 20, intensity: "Skitour Uphill", icon: "⛷️", text: "Skitour: 1000 hm with Z3 section." },
-      { day: 21, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core Workout" },
-      { day: 22, intensity: "VO2max Uphill", icon: "🚀", text: "Run: 8 x 2 min Z5 uphill." },
-      { day: 23, intensity: "Recovery", icon: "💤", text: "Run: 30 min Z1." },
-      { day: 24, intensity: "Long Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2." }
+      { day: 8, intensity: "VO2max", icon: "🚀", text: "Run: 6 x 3 min in Z5 with easy recovery between intervals." },
+      { day: 9, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min focused strength & stability work." },
+      { day: 10, intensity: "Skitour Sweet Spot", icon: "⛷️", text: "Skitour: 1000 hm total with 2 x 15 min uphill in Z3, rest in Z2." },
+      { day: 11, intensity: "Threshold", icon: "🔥", text: "Run: 25 min continuous threshold in Z4 after easy warmup." },
+      { day: 12, intensity: "Trail Endurance", icon: "🌲", text: "Run: 50 min easy trail run in Z2." },
+      { day: 13, intensity: "Skitour Steady", icon: "⛷️", text: "Skitour: 900–1100 hm in Z2–Z3, steady pacing." },
+      { day: 14, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core workout." },
+      { day: 15, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min relaxed endurance in Z2." },
+      { day: 16, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm, focus on transitions and efficiency." },
+      { day: 17, intensity: "Recovery", icon: "💤", text: "Run: 25 min very easy run or brisk walk in Z1." },
+      { day: 18, intensity: "Threshold", icon: "🔥", text: "Run: 3 x 8 min in Z4 with 3 min easy between." },
+      { day: 19, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy endurance in Z2." },
+      { day: 20, intensity: "Skitour Uphill", icon: "⛷️", text: "Skitour: 1000 hm with one 20 min section in Z3, otherwise Z2." },
+      { day: 21, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core workout." },
+      { day: 22, intensity: "VO2max Uphill", icon: "🚀", text: "Run: 8 x 2 min uphill in Z5 with 2 min easy jog between." },
+      { day: 23, intensity: "Recovery", icon: "💤", text: "Run: 30 min very easy Z1 or relaxed walk." },
+      { day: 24, intensity: "Final Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2. Enjoy the views and celebrate your Fitmas journey!" }
+    ];
+
+    // Motivational messages for toast
+    const successMessages = [
+      "Workout copied – you've got this! 💪",
+      "Nice! One step closer to Sellaronda. ⛷️",
+      "Copied – now make it count. 🔥",
+      "Let’s go, Katrin – strong and steady! 💫",
+      "You’re building serious mountain legs. 🏔️",
+      "Great choice. Consistency wins. ✅",
+      "Power up! Today’s work, tomorrow’s speed. ⚡",
+      "You’re tougher than you think. Keep going. 💜",
+      "Small steps, big summit. 🏔️",
+      "Copied – now own this session. 👊",
+      "Energy in, excuses out. 🚀",
+      "Every interval writes your race story. 📖",
+      "Nice! You’re training like an athlete. 🏃‍♀️",
+      "Today’s effort is tomorrow’s confidence. ✨",
+      "One more brick in the fitness wall. 🧱",
+      "Strong body, stronger mind. 🧠",
+      "Beautiful work. Stay patient. 🌙",
+      "Your future self is cheering for you. 🙌",
+      "This is how champions train. 🏅",
+      "Another win for Team Katrin. 🎉",
+      "Sellaronda is getting closer. ⛰️",
+      "Breathe, move, enjoy. 🌬️",
+      "Great job – keep the streak alive. 📆",
+      "Well done. You’re ready for more. ⭐"
     ];
 
     const grid = document.getElementById("grid");
@@ -313,7 +459,7 @@
 
     const isAdmin = new URLSearchParams(window.location.search).get("admin") === "true";
 
-    // -------- INTRO LOGIC --------
+    // INTRO LOGIC
     function hideIntro() {
       intro.style.display = "none";
       page.style.display = "block";
@@ -327,31 +473,84 @@
       page.style.display = "block";
     }
 
-    // -------- WORKOUT VISIBILITY --------
+    // VISIBILITY LOGIC
     function getVisibleDayLimit() {
       if (isAdmin) return 24;
       const now = new Date();
       if (now.getMonth() === 11) return Math.min(now.getDate(), 24);
-      return 0; // Hide all outside December
+      return 0; // Hide all outside December for user view
+    }
+
+    function getTodayInfo() {
+      const now = new Date();
+      return {
+        date: now.getDate(),
+        month: now.getMonth()
+      };
     }
 
     function showToast() {
+      const msg = successMessages[Math.floor(Math.random() * successMessages.length)];
+      toast.textContent = msg;
       toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 1500);
+      setTimeout(() => toast.classList.remove("show"), 1600);
     }
 
     function copyToClipboard(text) {
-      navigator.clipboard.writeText(text);
-      showToast();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showToast).catch(showToast);
+      } else {
+        // Fallback
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showToast();
+      }
+    }
+
+    // Simple confetti generator
+    function launchConfetti(cardElement, intensityMultiplier = 1) {
+      const rect = cardElement.getBoundingClientRect();
+      const baseCount = 14;
+      const count = Math.round(baseCount * intensityMultiplier);
+
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+        const leftOffset = rect.left + rect.width / 2 + (Math.random() * 80 - 40);
+        const topOffset = rect.top + 20 + Math.random() * 30;
+
+        piece.style.left = leftOffset + "px";
+        piece.style.top = topOffset + "px";
+
+        // Random color
+        const colors = ["#f97316", "#facc15", "#22c55e", "#38bdf8", "#a855f7", "#f472b6"];
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+        document.body.appendChild(piece);
+
+        setTimeout(() => {
+          piece.remove();
+        }, 1300);
+      }
     }
 
     function renderWorkouts() {
       const limit = getVisibleDayLimit();
+      const todayInfo = getTodayInfo();
+      const inDecember = todayInfo.month === 11;
+
       workouts
         .filter(w => w.day <= limit)
-        .forEach(w => {
+        .forEach((w, index) => {
           const card = document.createElement("div");
           card.className = "card";
+
+          // staggered load animation
+          card.style.animationDelay = (index * 0.06) + "s";
 
           const inner = document.createElement("div");
           inner.className = "card-inner";
@@ -381,13 +580,6 @@
           const goBtn = document.createElement("button");
           goBtn.className = "btn-secondary";
           goBtn.textContent = "Let's go";
-          goBtn.onclick = () => {
-            card.classList.add("flipped");
-          };
-
-          front.appendChild(headerFront);
-          front.appendChild(textFront);
-          front.appendChild(goBtn);
 
           // BACK
           const back = document.createElement("div");
@@ -414,11 +606,7 @@
           const copyBtn = document.createElement("button");
           copyBtn.className = "btn";
           copyBtn.textContent = "Copy workout";
-          copyBtn.onclick = () => {
-          copyToClipboard(w.text);
-          window.open("https://importmyworkout.com/", "_blank");
-        };
-
+          copyBtn.onclick = () => copyToClipboard(w.text);
 
           back.appendChild(headerBack);
           back.appendChild(textBack);
@@ -427,6 +615,27 @@
           inner.appendChild(front);
           inner.appendChild(back);
           card.appendChild(inner);
+
+          // Today / past styling (applies also in admin if in December)
+          if (inDecember && w.day === todayInfo.date) {
+            card.classList.add("today-card");
+          } else if (inDecember && w.day < todayInfo.date) {
+            card.classList.add("past-card");
+          }
+
+          // Confetti on 7, 14, 21, 24
+          goBtn.onclick = () => {
+            card.classList.add("flipped");
+
+            if ([7, 14, 21].includes(w.day)) {
+              launchConfetti(card, 1.2);
+            } else if (w.day === 24) {
+              // finale: more confetti
+              launchConfetti(card, 2.2);
+              setTimeout(() => launchConfetti(card, 1.8), 300);
+            }
+          };
+
           grid.appendChild(card);
         });
     }
