@@ -386,7 +386,7 @@
     // Randomize snowflakes position & speed
     (function initSnowflakes() {
       const flakes = document.querySelectorAll(".snowflake");
-      flakes.forEach((flake, index) => {
+      flakes.forEach((flake) => {
         const delay = Math.random() * 10;
         const duration = 12 + Math.random() * 10;
         const startLeft = Math.random() * 100;
@@ -398,10 +398,10 @@
 
     // Workouts
     const workouts = [
-      { day: 1, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core workout." },
+      { day: 1, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min mobility and core workout." },
       { day: 2, intensity: "Skitour Easy", icon: "⛷️", text: "Skitour: 600–800 hm in Z2 at steady cadence." },
       { day: 3, intensity: "Recovery", icon: "💤", text: "Run: 30 min very easy recovery run in Z1." },
-      { day: 4, intensity: "Threshold Uphill", icon: "🔥", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4, cooldown." },
+      { day: 4, intensity: "Threshold Uphill", icon: "🔥", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4, easy cooldown." },
       { day: 5, intensity: "Trail Endurance", icon: "🌲", text: "Run: 60 min trail run in Z2." },
       { day: 6, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm in Z2, focus on smooth technique." },
       { day: 7, intensity: "Long Endurance", icon: "🏃‍♀️", text: "Run: 90 min endurance run in Z2." },
@@ -411,14 +411,14 @@
       { day: 11, intensity: "Threshold", icon: "🔥", text: "Run: 25 min continuous threshold in Z4 after easy warmup." },
       { day: 12, intensity: "Trail Endurance", icon: "🌲", text: "Run: 50 min easy trail run in Z2." },
       { day: 13, intensity: "Skitour Steady", icon: "⛷️", text: "Skitour: 900–1100 hm in Z2–Z3, steady pacing." },
-      { day: 14, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core workout." },
+      { day: 14, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min mobility and core workout." },
       { day: 15, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min relaxed endurance in Z2." },
       { day: 16, intensity: "Skitour Technique", icon: "⛷️", text: "Skitour: 700–900 hm, focus on transitions and efficiency." },
       { day: 17, intensity: "Recovery", icon: "💤", text: "Run: 25 min very easy run or brisk walk in Z1." },
       { day: 18, intensity: "Threshold", icon: "🔥", text: "Run: 3 x 8 min in Z4 with 3 min easy between." },
       { day: 19, intensity: "Easy Run", icon: "🏃‍♀️", text: "Run: 45 min easy endurance in Z2." },
       { day: 20, intensity: "Skitour Uphill", icon: "⛷️", text: "Skitour: 1000 hm with one 20 min section in Z3, otherwise Z2." },
-      { day: 21, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min Mobility/Core workout." },
+      { day: 21, intensity: "Workout", icon: "🏋🏼‍♀️", text: "Mobility/Core: 45 min mobility and core workout." },
       { day: 22, intensity: "VO2max Uphill", icon: "🚀", text: "Run: 8 x 2 min uphill in Z5 with 2 min easy jog between." },
       { day: 23, intensity: "Recovery", icon: "💤", text: "Run: 30 min very easy Z1 or relaxed walk." },
       { day: 24, intensity: "Final Skitour", icon: "⛷️", text: "Skitour: 1200–1500 hm in Z2. Enjoy the views and celebrate your Fitmas journey!" }
@@ -457,18 +457,25 @@
     const intro = document.getElementById("intro");
     const page = document.querySelector(".page");
 
-    const isAdmin = new URLSearchParams(window.location.search).get("admin") === "true";
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAdmin = urlParams.get("admin") === "true";
 
     // INTRO LOGIC
     function hideIntro() {
       intro.style.display = "none";
       page.style.display = "block";
-      localStorage.setItem("advent_intro_shown", "yes");
+      if (!isAdmin) {
+        localStorage.setItem("advent_intro_shown", "yes");
+      }
     }
 
     document.getElementById("intro-btn").onclick = hideIntro;
 
-    if (localStorage.getItem("advent_intro_shown") === "yes") {
+    // Admin skips intro automatically
+    if (isAdmin) {
+      intro.style.display = "none";
+      page.style.display = "block";
+    } else if (localStorage.getItem("advent_intro_shown") === "yes") {
       intro.style.display = "none";
       page.style.display = "block";
     }
@@ -500,7 +507,6 @@
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(showToast).catch(showToast);
       } else {
-        // Fallback
         const textarea = document.createElement("textarea");
         textarea.value = text;
         document.body.appendChild(textarea);
@@ -526,15 +532,11 @@
         piece.style.left = leftOffset + "px";
         piece.style.top = topOffset + "px";
 
-        // Random color
         const colors = ["#f97316", "#facc15", "#22c55e", "#38bdf8", "#a855f7", "#f472b6"];
         piece.style.background = colors[Math.floor(Math.random() * colors.length)];
 
         document.body.appendChild(piece);
-
-        setTimeout(() => {
-          piece.remove();
-        }, 1300);
+        setTimeout(() => piece.remove(), 1300);
       }
     }
 
@@ -548,8 +550,6 @@
         .forEach((w, index) => {
           const card = document.createElement("div");
           card.className = "card";
-
-          // staggered load animation
           card.style.animationDelay = (index * 0.06) + "s";
 
           const inner = document.createElement("div");
@@ -580,6 +580,10 @@
           const goBtn = document.createElement("button");
           goBtn.className = "btn-secondary";
           goBtn.textContent = "Let's go";
+
+          front.appendChild(headerFront);
+          front.appendChild(textFront);
+          front.appendChild(goBtn);
 
           // BACK
           const back = document.createElement("div");
@@ -616,7 +620,7 @@
           inner.appendChild(back);
           card.appendChild(inner);
 
-          // Today / past styling (applies also in admin if in December)
+          // Today / past styling – nur im Dezember
           if (inDecember && w.day === todayInfo.date) {
             card.classList.add("today-card");
           } else if (inDecember && w.day < todayInfo.date) {
@@ -630,7 +634,6 @@
             if ([7, 14, 21].includes(w.day)) {
               launchConfetti(card, 1.2);
             } else if (w.day === 24) {
-              // finale: more confetti
               launchConfetti(card, 2.2);
               setTimeout(() => launchConfetti(card, 1.8), 300);
             }
