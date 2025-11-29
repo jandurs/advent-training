@@ -129,204 +129,95 @@
       transform: translate(-50%, -4px);
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        scroll-behavior: auto !important;
-        transition: none !important;
-      }
-    }
   </style>
 </head>
 <body>
   <div class="page">
     <h1>Sellaronda Advent Training</h1>
     <p class="subtitle">
-      24 structured December workouts towards Sellaronda Skimarathon. In December, only workouts up to today are visible. Click a day to copy the workout text for importmyworkout.com.
+      24 skimo-specific December workouts. Only days up to today are visible in December.
     </p>
 
     <div id="grid" class="grid"></div>
   </div>
 
-  <div id="toast" class="toast">Workout copied to clipboard</div>
+  <div id="toast" class="toast">Workout copied</div>
 
   <script>
-    // Advent workouts: skimo-oriented, zone based for importmyworkout.com
     const workouts = [
-      {
-        day: 1,
-        intensity: "Easy",
-        text: "Run: 45 min easy endurance run in Z2."
-      },
-      {
-        day: 2,
-        intensity: "Endurance Uphill",
-        text: "Run: 10 min warmup in Z1, 30 min steady uphill effort in Z3, 10 min cooldown in Z1."
-      },
-      {
-        day: 3,
-        intensity: "Recovery",
-        text: "Run: 30 min very easy recovery run in Z1."
-      },
-      {
-        day: 4,
-        intensity: "Threshold",
-        text: "Run: 15 min warmup in Z1, 4 x 6 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1."
-      },
-      {
-        day: 5,
-        intensity: "Trail Endurance",
-        text: "Run: 60 min trail run in Z2."
-      },
-      {
-        day: 6,
-        intensity: "Uphill Technique",
-        text: "Run: 10 min warmup in Z1, 30 min moderate uphill in Z2 working on steady cadence, 10 min cooldown in Z1."
-      },
-      {
-        day: 7,
-        intensity: "Long Endurance",
-        text: "Run: 90 min long run in Z2."
-      },
-      {
-        day: 8,
-        intensity: "VO2max",
-        text: "Run: 15 min warmup in Z1, 6 x 3 min in Z5 with 3 min recovery in Z1, 10 min cooldown in Z1."
-      },
-      {
-        day: 9,
-        intensity: "Recovery",
-        text: "Run: 35 min very easy recovery run in Z1."
-      },
-      {
-        day: 10,
-        intensity: "Sweet Spot Uphill",
-        text: "Run: 10 min warmup in Z1, 40 min steady uphill sweet spot in Z3, 10 min cooldown in Z1."
-      },
-      {
-        day: 11,
-        intensity: "Threshold",
-        text: "Run: 10 min warmup in Z1, 25 min continuous threshold in Z4, 10 min cooldown in Z1."
-      },
-      {
-        day: 12,
-        intensity: "Trail Endurance",
-        text: "Run: 50 min easy trail run in Z2."
-      },
-      {
-        day: 13,
-        intensity: "Uphill Endurance",
-        text: "Run: 10 min warmup in Z1, 35 min steady uphill effort in Z3, 10 min cooldown in Z1."
-      },
-      {
-        day: 14,
-        intensity: "Long Trail",
-        text: "Run: 130–140 min long trail run in Z2."
-      },
-      {
-        day: 15,
-        intensity: "Easy",
-        text: "Run: 45 min easy endurance run in Z2."
-      },
-      {
-        day: 16,
-        intensity: "Technique Uphill",
-        text: "Run: 10 min warmup in Z1, 30 min technique-focused uphill in Z2, 10 min cooldown in Z1."
-      },
-      {
-        day: 17,
-        intensity: "Recovery",
-        text: "Run: 25 min very easy recovery session in Z1."
-      },
-      {
-        day: 18,
-        intensity: "Threshold",
-        text: "Run: 10 min warmup in Z1, 3 x 8 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1."
-      },
-      {
-        day: 19,
-        intensity: "Easy",
-        text: "Run: 45 min easy run in Z2."
-      },
-      {
-        day: 20,
-        intensity: "Uphill Endurance",
-        text: "Run: 10 min warmup in Z1, 40 min moderate uphill in Z3, 10 min cooldown in Z1."
-      },
-      {
-        day: 21,
-        intensity: "Recovery",
-        text: "Run: 20–25 min very easy movement in Z1."
-      },
-      {
-        day: 22,
-        intensity: "VO2max",
-        text: "Run: 15 min warmup in Z1, 8 x 2 min in Z5 with 2 min recovery in Z1, 10 min cooldown in Z1."
-      },
-      {
-        day: 23,
-        intensity: "Recovery",
-        text: "Run: 30 min very easy recovery run or brisk walk in Z1."
-      },
-      {
-        day: 24,
-        intensity: "Long Endurance",
-        text: "Run: 75–90 min easy trail run in Z2."
-      }
+      { day: 1, intensity: "Easy Run", text: "Run: 45 min easy endurance run in Z2." },
+      { day: 2, intensity: "Skitour Easy", text: "Skitour: 600–800 hm in Z2 at steady cadence." },
+      { day: 3, intensity: "Recovery", text: "Run: 30 min very easy recovery run in Z1." },
+
+      { day: 4, intensity: "Threshold Uphill", text: "Run: 15 min warmup in Z1, 4 x 6 min uphill in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1." },
+
+      { day: 5, intensity: "Trail Endurance", text: "Run: 60 min trail run in Z2." },
+
+      { day: 6, intensity: "Skitour Technique", text: "Skitour: 700–900 hm in Z2 focusing on efficient kick turns and cadence." },
+
+      { day: 7, intensity: "Long Endurance", text: "Run: 90 min long endurance run in Z2." },
+
+      { day: 8, intensity: "VO2max", text: "Run: 15 min warmup in Z1, 6 x 3 min in Z5 with 3 min recovery in Z1, 10 min cooldown in Z1." },
+
+      { day: 9, intensity: "Recovery", text: "Run: 35 min very easy recovery run in Z1." },
+
+      { day: 10, intensity: "Skitour Sweet Spot", text: "Skitour: 1000 hm total with 2 x 15 min uphill in Z3, rest in Z2." },
+
+      { day: 11, intensity: "Threshold", text: "Run: 10 min warmup in Z1, 25 min threshold in Z4, 10 min cooldown in Z1." },
+
+      { day: 12, intensity: "Trail Endurance", text: "Run: 50 min easy trail run in Z2." },
+
+      { day: 13, intensity: "Skitour Steady", text: "Skitour: 900–1100 hm in Z2–Z3 steady pace." },
+
+      { day: 14, intensity: "Long Skitour", text: "Skitour: 1200–1500 hm in Z2. Nutrition practice mandatory." },
+
+      { day: 15, intensity: "Easy Run", text: "Run: 45 min easy run in Z2." },
+
+      { day: 16, intensity: "Skitour Technique", text: "Skitour: 700–900 hm in Z2 focusing on transitions and pole work." },
+
+      { day: 17, intensity: "Recovery", text: "Run: 25 min very easy recovery run in Z1." },
+
+      { day: 18, intensity: "Threshold", text: "Run: 10 min warmup in Z1, 3 x 8 min in Z4 with 3 min recovery in Z1, 10 min cooldown in Z1." },
+
+      { day: 19, intensity: "Easy Run", text: "Run: 45 min easy endurance run in Z2." },
+
+      { day: 20, intensity: "Skitour Uphill", text: "Skitour: 1000 hm with 20 min Z3 block halfway up, rest Z2." },
+
+      { day: 21, intensity: "Recovery", text: "Run: 20–25 min very easy recovery in Z1." },
+
+      { day: 22, intensity: "VO2max Uphill", text: "Run: 15 min warmup in Z1, 8 x 2 min uphill in Z5 with 2 min recovery in Z1, 10 min cooldown in Z1." },
+
+      { day: 23, intensity: "Recovery", text: "Run: 30 min very easy recovery run or walk in Z1." },
+
+      { day: 24, intensity: "Long Skitour", text: "Skitour: 1200–1500 hm in Z2. Relaxed, flowy, holiday energy." }
     ];
 
     const grid = document.getElementById("grid");
     const toast = document.getElementById("toast");
-    let toastTimeout = null;
 
-    function showToast(message) {
-      toast.textContent = message;
+    function showToast() {
       toast.classList.add("show");
-      if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 1500);
+      setTimeout(() => toast.classList.remove("show"), 1500);
     }
 
-    async function copyToClipboard(text) {
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          // Fallback
-          const textarea = document.createElement("textarea");
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
-        }
-        showToast("Workout copied to clipboard");
-      } catch (err) {
-        console.error(err);
-        showToast("Copy failed – please copy manually");
-      }
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      showToast();
     }
 
     function getVisibleDayLimit() {
       const today = new Date();
-      const month = today.getMonth(); // 0 = Jan, 11 = Dec
+      const month = today.getMonth(); // 11 = December
       const date = today.getDate();
-
-      // In December: only show up to today's date (max 24)
-      if (month === 11) {
-        return Math.min(date, 24);
-      }
-
-      // In all other months: show all days (useful for testing)
-      return 24;
+      if (month === 11) return Math.min(date, 24);
+      return 24; // for testing outside December
     }
 
     function renderWorkouts() {
-      const visibleDayLimit = getVisibleDayLimit();
-
+      const limit = getVisibleDayLimit();
       workouts
-        .filter((w) => w.day <= visibleDayLimit)
-        .forEach((w) => {
+        .filter(w => w.day <= limit)
+        .forEach(w => {
           const card = document.createElement("div");
           card.className = "card";
 
@@ -344,19 +235,18 @@
           header.appendChild(dayLabel);
           header.appendChild(intensity);
 
-          const text = document.createElement("div");
-          text.className = "text";
-          text.textContent = w.text;
+          const textDiv = document.createElement("div");
+          textDiv.className = "text";
+          textDiv.textContent = w.text;
 
           const btn = document.createElement("button");
           btn.className = "btn";
           btn.textContent = "Copy workout";
-          btn.addEventListener("click", () => copyToClipboard(w.text));
+          btn.onclick = () => copyToClipboard(w.text);
 
           card.appendChild(header);
-          card.appendChild(text);
+          card.appendChild(textDiv);
           card.appendChild(btn);
-
           grid.appendChild(card);
         });
     }
