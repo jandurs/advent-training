@@ -518,9 +518,9 @@
     }
 
     // Simple confetti generator
-    function launchConfetti(cardElement, intensityMultiplier = 1) {
+    function launchConfetti(cardElement, intensityMultiplier = 2) {
       const rect = cardElement.getBoundingClientRect();
-      const baseCount = 14;
+      const baseCount = 56;
       const count = Math.round(baseCount * intensityMultiplier);
 
       for (let i = 0; i < count; i++) {
