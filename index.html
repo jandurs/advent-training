@@ -141,7 +141,7 @@
   <div class="page">
     <h1>Advent Training Calendar</h1>
     <p class="subtitle">
-      24 structured workouts for importmyworkout.com – click a day to copy the workout text.
+      Only workouts up to today are visible in December. Click a day to copy the workout text for importmyworkout.com.
     </p>
 
     <div id="grid" class="grid"></div>
@@ -306,40 +306,58 @@
       }
     }
 
+    function getVisibleDayLimit() {
+      const today = new Date();
+      const month = today.getMonth(); // 0 = Jan, 11 = Dec
+      const date = today.getDate();
+
+      // In December: only show up to today's date (max 24)
+      if (month === 11) {
+        return Math.min(date, 24);
+      }
+
+      // In all other months: show all days (useful for testing)
+      return 24;
+    }
+
     function renderWorkouts() {
-      workouts.forEach((w) => {
-        const card = document.createElement("div");
-        card.className = "card";
+      const visibleDayLimit = getVisibleDayLimit();
 
-        const header = document.createElement("div");
-        header.className = "card-header";
+      workouts
+        .filter((w) => w.day <= visibleDayLimit)
+        .forEach((w) => {
+          const card = document.createElement("div");
+          card.className = "card";
 
-        const dayLabel = document.createElement("div");
-        dayLabel.className = "day-label";
-        dayLabel.textContent = `Day ${w.day}`;
+          const header = document.createElement("div");
+          header.className = "card-header";
 
-        const intensity = document.createElement("div");
-        intensity.className = "intensity";
-        intensity.textContent = w.intensity;
+          const dayLabel = document.createElement("div");
+          dayLabel.className = "day-label";
+          dayLabel.textContent = `Day ${w.day}`;
 
-        header.appendChild(dayLabel);
-        header.appendChild(intensity);
+          const intensity = document.createElement("div");
+          intensity.className = "intensity";
+          intensity.textContent = w.intensity;
 
-        const text = document.createElement("div");
-        text.className = "text";
-        text.textContent = w.text;
+          header.appendChild(dayLabel);
+          header.appendChild(intensity);
 
-        const btn = document.createElement("button");
-        btn.className = "btn";
-        btn.textContent = "Copy workout";
-        btn.addEventListener("click", () => copyToClipboard(w.text));
+          const text = document.createElement("div");
+          text.className = "text";
+          text.textContent = w.text;
 
-        card.appendChild(header);
-        card.appendChild(text);
-        card.appendChild(btn);
+          const btn = document.createElement("button");
+          btn.className = "btn";
+          btn.textContent = "Copy workout";
+          btn.addEventListener("click", () => copyToClipboard(w.text));
 
-        grid.appendChild(card);
-      });
+          card.appendChild(header);
+          card.appendChild(text);
+          card.appendChild(btn);
+
+          grid.appendChild(card);
+        });
     }
 
     renderWorkouts();
